@@ -17,7 +17,20 @@ To install the server you simply download the binary.
 # Download the binary
 wget -O webdav https://github.com/ChappIO/simple-webdav/releases/latest/download/webdav_linux_amd64
 # Move it into a more appropriate place
+chmod +x webdav
 sudo mv webdav /usr/local/bin/webdav
+# Test
+webdav --version
+```
+
+### FreeBSD (TrueNAS)
+
+```bash
+# Download the binary
+wget -O webdav https://github.com/ChappIO/simple-webdav/releases/latest/download/webdav_freebsd_amd64
+# Move it into a more appropriate place
+chmod +x webdav
+mv webdav /usr/local/bin/webdav
 # Test
 webdav --version
 ```

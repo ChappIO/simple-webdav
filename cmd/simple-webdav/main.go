@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"path"
+	"path/filepath"
 	"simple-webdav/pkg/dav"
 	"simple-webdav/pkg/htpasswd"
 	"syscall"
@@ -23,6 +23,14 @@ var homeFolder = ""
 var dataRoot = ""
 var htpasswordFile = ""
 var serverPort = 0
+
+func resolve(basePath string, path string) string {
+	if filepath.IsAbs(path) {
+		return filepath.Clean(path)
+	} else {
+		return filepath.Clean(filepath.Join(basePath, path))
+	}
+}
 
 func init() {
 	flag.BoolVar(&printVersion, "version", false, "Show the version")
@@ -45,10 +53,10 @@ func init() {
 		if err != nil {
 			panic("homeDir not found, please provide it using the --homeDir option")
 		}
-		homeFolder = path.Clean(path.Join(home, ".simple-webdav"))
+		homeFolder = resolve(home, ".simple-webdav")
 	}
-	htpasswordFile = path.Clean(path.Join(homeFolder, htpasswordFile))
-	dataRoot = path.Clean(path.Join(homeFolder, dataRoot))
+	htpasswordFile = resolve(homeFolder, htpasswordFile)
+	dataRoot = resolve(homeFolder, dataRoot)
 }
 
 func main() {
