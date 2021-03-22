@@ -1,0 +1,16 @@
+name: Build and Publish
+on: [push]
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: ['linux', 'freebsd']
+        goarch: ['amd64']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - run: mkdir -p build
+      - run: GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o build/webdav_${{matrix.goos}}_${{matrix.goarch}} ./cmd/simple-webdav/
