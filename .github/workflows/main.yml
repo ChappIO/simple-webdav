@@ -1,5 +1,9 @@
 name: Build and Publish
-on: [push]
+on:
+  release:
+    types:
+      - created
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -13,4 +17,10 @@ jobs:
         with:
           go-version: 1.16
       - run: mkdir -p build
-      - run: GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -o build/webdav_${{matrix.goos}}_${{matrix.goarch}} ./cmd/simple-webdav/
+      - run: GOOS=${{matrix.goos}} GOARCH=${{matrix.goarch}} go build -ldflags "-X main.version=${{ github.event.release.tag_name }}" -o build/webdav_${{matrix.goos}}_${{matrix.goarch}} ./cmd/simple-webdav/
+      - uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: build/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
